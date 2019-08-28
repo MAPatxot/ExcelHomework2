@@ -1,0 +1,82 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
+Attribute VB_Name = "ThisWorkbook"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+' Create a script that will loop through one year of stock data for each run
+' and return the total volume each stock had over that year.
+' You will also need to display the ticker symbol to coincide with the total stock volume.
+
+Sub easy_ticker()
+    Dim ws As Worksheet
+    headers = Array("Ticker", "Total Stock Volume")
+
+
+' Creating headers for each worksheet
+' .AutoFit - changes the width of the columns in the range or height of the rows in the
+' range to achieve the best fit
+    
+    For Each ws In Worksheets
+        ws.Select
+        Range("I1:J1").Value = headers
+        Range("I1:J1").Font.Bold = True
+        Range("I:J").EntireColumn.AutoFit
+
+' Initial variables
+' We need a ticker, volume total, and summary table
+' choose the right type variable
+
+  Dim ticker As String
+
+  Dim Volume_Total As Double
+  Volume_Total = 0
+
+' location tracker for each stock in the summary table
+  Dim Sum_Table_Row As Integer
+  Sum_Table_Row = 2
+  
+' how to determine lastrow automatically
+  lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+  
+' Beginning of loop, remember to end loops
+  For i = 2 To lastrow
+
+' "Clause for detecting the difference in stock tickers in column 1"
+' <> means not equal to
+
+    If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+
+      ticker = Cells(i, 1).Value
+
+      Volume_Total = Volume_Total + Cells(i, 7).Value
+
+' Printing ticker and volume_total to their respective columns
+      Range("I" & Sum_Table_Row).Value = ticker
+
+      Range("J" & Sum_Table_Row).Value = Volume_Total
+
+      Sum_Table_Row = Sum_Table_Row + 1
+      
+' Reset the counter for Stock Volume
+      Volume_Total = 0
+
+    Else
+
+      Volume_Total = Volume_Total + Cells(i, 7).Value
+
+    End If
+
+  Next i
+  
+  Next
+
+End Sub
+
+
+
+
+
